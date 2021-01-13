@@ -13,35 +13,23 @@ router.post("/cart", (req, res) => {
 });
 
 router.put("/cart/:cartId/item/:item/:quantity", (req, res) => {    
-    let params = getCartIdItemIdQuantityByRequest(req);
-    let cart = carts.get(params.cartId);
-
-    cart.addItem(params.item, params.quantity);
-
-    res.json({
-        success:true
-    });
+    updateCart(req, res, true);
 });
 
 router.delete("/cart/:cartId/item/:item/:quantity", (req, res) => {    
-    let params = getCartIdItemIdQuantityByRequest(req);
-    let cart = carts.get(params.cartId);
-
-    cart.removeItem(params.item, params.quantity);
-
-    res.json({
-        success:true
-    });
+    updateCart(req, res, false);
 });
 
 router.get("/cart/:cartId", (req, res) => {    
     let cartId = req.params.cartId;
-    let cart = carts.get(cartId);
+    let cart = getCart(res, cartId)
 
-    res.json({
-        success:true,
-        items: cart.getItems()
-    });
+    if (cart) {
+        res.json({
+            success:true,
+            items: cart.getItems()
+        });
+    }
 });
 
 module.exports = router;
@@ -52,4 +40,33 @@ function getCartIdItemIdQuantityByRequest(req) {
         item: req.params.item,
         quantity: parseInt(req.params.quantity)
     };
+}
+
+function updateCart(req, res, add) {
+    let params = getCartIdItemIdQuantityByRequest(req);
+    let cart = getCart(res, params.cartId)
+
+    if (cart) {
+        if (add) {
+            cart.addItem(params.item, params.quantity);
+        } else {
+            cart.removeItem(params.item, params.quantity);
+        }
+    
+        res.json({
+            success:true
+        });    
+    }
+}
+
+function getCart(res, cartId) {
+    let cart = carts.get(cartId);
+
+    if (!cart) {
+        res.status(404).json({
+            success:false
+        });
+    }
+
+    return cart;
 }

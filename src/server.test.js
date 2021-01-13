@@ -53,6 +53,32 @@ it("Remove an item from the cart", async done => {
     done();
 });
 
+it("Add to not existing cart", async done => {
+    let url = prefix + "/cart/" + v4() + "/item/" + testItem + "/" + 1;
+    const addedItemResponse = await request.put(url);
+
+    expect(addedItemResponse.body.success).toBeFalsy();
+
+    done();
+});
+
+it("Remove from not existing cart", async done => {
+    let url = prefix + "/cart/" + v4() + "/item/" + testItem + "/" + 1;
+    const response = await request.put(url);
+
+    expect(response.body.success).toBeFalsy();
+
+    done();
+});
+
+it("List from not existing cart", async done => {
+    const response = await list(v4());
+
+    expect(response.success).toBeFalsy();
+
+    done();
+});
+
 async function createCart() {
     const res = await request.post(prefix + "/cart");    
 
