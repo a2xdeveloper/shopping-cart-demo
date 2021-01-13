@@ -24,11 +24,20 @@ it("Add an item to the cart", async done => {
 
     expect(addedItemResponse.body.success).toBeTruthy();
 
+    let listResponse = await list(cart.id);
+
+    expect(listResponse.items[items.item1.id]).toBe(1);    
+
     done();
 });
 
 async function createCart() {
     const res = await request.post(prefix + "/cart");    
 
+    return res.body;
+}
+
+async function list(id) {
+    const res = await request.get(prefix + "/cart/"+id);
     return res.body;
 }
