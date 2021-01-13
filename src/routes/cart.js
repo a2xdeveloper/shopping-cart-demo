@@ -25,6 +25,19 @@ router.put("/cart/:cartId/item/:item/:quantity", (req, res) => {
     });
 });
 
+router.delete("/cart/:cartId/item/:item/:quantity", (req, res) => {    
+    let cartId = req.params.cartId;
+    let item = req.params.item;
+    let quantity = req.params.quantity;
+    let cart = carts.get(cartId);
+
+    cart.removeItem(item, quantity);
+
+    res.json({
+        success:true
+    });
+});
+
 router.get("/cart/:cartId", (req, res) => {    
     let cartId = req.params.cartId;
     let cart = carts.get(cartId);
