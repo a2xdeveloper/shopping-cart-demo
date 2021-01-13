@@ -1,11 +1,12 @@
 "use strict";
 const supertest = require("supertest");
-const { validate } = require('uuid');
+const { validate, v4 } = require('uuid');
 const server = require("./server");
 const request = supertest(server);
-const items = require("./items");
 
 const prefix = "/v1"
+
+let testItem = v4();
 
 it("Create a cart", async done => {
     let cartResponse = await createCart();
@@ -19,35 +20,35 @@ it("Create a cart", async done => {
 
 it("Add an item to the cart", async done => {
     let cart = await createCart();
-    let url = prefix + "/cart/" + cart.id + "/item/" + items.item1.id + "/" + 1;
+    let url = prefix + "/cart/" + cart.id + "/item/" + testItem + "/" + 1;
     const addedItemResponse = await request.put(url);
 
     expect(addedItemResponse.body.success).toBeTruthy();
 
     let listResponse = await list(cart.id);
 
-    expect(listResponse.items[items.item1.id]).toBe(1);    
+    expect(listResponse.items[testItem]).toBe(1);    
 
     done();
 });
 
 it("Remove an item from the cart", async done => {
     let cart = await createCart();
-    let url = prefix + "/cart/" + cart.id + "/item/" + items.item1.id + "/" + 1;
+    let url = prefix + "/cart/" + cart.id + "/item/" + testItem + "/" + 1;
     const addedItemResponse = await request.put(url);
 
     expect(addedItemResponse.body.success).toBeTruthy();
 
     let listResponse = await list(cart.id);
 
-    expect(listResponse.items[items.item1.id]).toBe(1);
+    expect(listResponse.items[testItem]).toBe(1);
     
     const removeItemResponse = await request.delete(url);
     expect(removeItemResponse.body.success).toBeTruthy();
 
     listResponse = await list(cart.id);
 
-    expect(listResponse.items[items.item1.id]).toBeUndefined();
+    expect(listResponse.items[testItem]).toBeUndefined();
 
     done();
 });
