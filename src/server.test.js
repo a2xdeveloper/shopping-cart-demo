@@ -1,6 +1,6 @@
 "use strict";
 const supertest = require("supertest");
-const uuid = require("uuidv4");
+const { validate } = require('uuid');
 const server = require("./server");
 const request = supertest(server);
 const items = require("./items");
@@ -12,7 +12,7 @@ it("Create a cart", async done => {
 
     expect(cartResponse.success).toBeTruthy();    
     
-    expect(uuid.isUuid(cartResponse.id)).toBeTruthy();
+    expect(validate(cartResponse.id)).toBeTruthy();
     
     done();
 });

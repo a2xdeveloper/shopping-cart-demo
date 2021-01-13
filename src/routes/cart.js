@@ -13,12 +13,10 @@ router.post("/cart", (req, res) => {
 });
 
 router.put("/cart/:cartId/item/:item/:quantity", (req, res) => {    
-    let cartId = req.params.cartId;
-    let item = req.params.item;
-    let quantity = req.params.quantity;
-    let cart = carts.get(cartId);
+    let params = getCartIdItemIdQuantityByRequest(req);
+    let cart = carts.get(params.cartId);
 
-    cart.addItem(item, quantity);
+    cart.addItem(params.item, params.quantity);
 
     res.json({
         success:true
@@ -26,12 +24,10 @@ router.put("/cart/:cartId/item/:item/:quantity", (req, res) => {
 });
 
 router.delete("/cart/:cartId/item/:item/:quantity", (req, res) => {    
-    let cartId = req.params.cartId;
-    let item = req.params.item;
-    let quantity = req.params.quantity;
-    let cart = carts.get(cartId);
+    let params = getCartIdItemIdQuantityByRequest(req);
+    let cart = carts.get(params.cartId);
 
-    cart.removeItem(item, quantity);
+    cart.removeItem(params.item, params.quantity);
 
     res.json({
         success:true
@@ -49,3 +45,11 @@ router.get("/cart/:cartId", (req, res) => {
 });
 
 module.exports = router;
+
+function getCartIdItemIdQuantityByRequest(req) {
+    return {
+        cartId: req.params.cartId,
+        item: req.params.item,
+        quantity: parseInt(req.params.quantity)
+    };
+}

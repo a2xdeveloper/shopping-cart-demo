@@ -1,10 +1,10 @@
 "use strict";
-const uuid = require("uuidv4");
+const { v4: uuidv4 } = require('uuid');
 
 class Cart {
 
     constructor() {
-        this.id = uuid.uuid();
+        this.id = uuidv4();
         this.items = {};
     }
 

@@ -1,12 +1,12 @@
 "use strict";
-const uuid = require("uuidv4");
+const { validate } = require('uuid');
 const carts = require("./carts");
 
 
 it("Get a new cart", () => {
     let cart = carts.new();
 
-    expect(uuid.isUuid(cart.id)).toBeTruthy();
+    expect(validate(cart.id)).toBeTruthy();
 });
 
 it("Get a cart from memory", () => {
